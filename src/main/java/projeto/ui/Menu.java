@@ -166,7 +166,7 @@ public class Menu {
 
             idade = Integer.parseInt(idadeStr);
 
-            if (idade < 0) {
+            if (idade <= 0) {
                 System.out.println("A idade não pode ser negativa.");
                 continue;
             }
