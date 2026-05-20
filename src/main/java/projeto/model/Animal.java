@@ -19,7 +19,22 @@ public abstract class Animal {
     }
 
     public int getId() { return id; }
-    public String getNome() { return nome; }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEspecie() {
+        return especie;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
     public Proprietario getProprietario() { return proprietario; }
 
     public abstract String emitirSom();

@@ -79,6 +79,7 @@ public class Menu {
             registarAnimal();
         }
     }
+
     private void registarVeterinario() {
 
         String nome = lerNomeValido("Nome do veterinário: ");
@@ -100,6 +101,7 @@ public class Menu {
 
         System.out.println("Veterinário registado com sucesso.");
     }
+
     private void registarAnimal() {
 
         if (service.proprietarios.isEmpty()) {
@@ -199,8 +201,23 @@ public class Menu {
             }
             break;
         }
+// ---
+        System.out.println("\n--- PROPRIETÁRIOS ---");
 
-        Proprietario proprietario = service.proprietarios.get(0);
+        for (int i = 0; i < service.proprietarios.size(); i++) {
+
+            System.out.println(
+                    (i + 1) + ". "
+                            + service.proprietarios.get(i).getNome()
+            );
+        }
+
+        System.out.print("Escolha o proprietário: ");
+
+        int escolha = Integer.parseInt(sc.nextLine());
+
+        Proprietario p =
+                service.proprietarios.get(escolha - 1);
 
         Animal animal;
 
@@ -214,7 +231,7 @@ public class Menu {
                         nome,
                         raca,
                         idade,
-                        proprietario
+                        p
                 );
                 break;
 
@@ -225,7 +242,7 @@ public class Menu {
                         nome,
                         raca,
                         idade,
-                        proprietario
+                        p
                 );
                 break;
 
@@ -236,7 +253,7 @@ public class Menu {
                         nome,
                         raca,
                         idade,
-                        proprietario
+                        p
                 );
                 break;
 
@@ -248,15 +265,17 @@ public class Menu {
                         especieTexto,
                         raca,
                         idade,
-                        proprietario
+                        p
                 ) {
 
                     @Override
                     public String emitirSom() {
+
                         return "Som desconhecido";
                     }
                 };
         }
+
 
         service.adicionarAnimal(animal);
 
@@ -265,22 +284,122 @@ public class Menu {
 
     private void registarConsulta() {
 
-        if (service.animais.isEmpty() || service.veterinarios.isEmpty()) {
+        if (service.animais.isEmpty()) {
 
-            System.out.println("Necessita animais e veterinários.");
+            System.out.println(
+                    "Não existem animais registados."
+            );
+
             return;
         }
 
+        if (service.veterinarios.isEmpty()) {
+
+            System.out.println(
+                    "Não existem veterinários registados."
+            );
+
+            return;
+        }
+
+        // LISTAR ANIMAIS
+        System.out.println("\n--- ANIMAIS ---");
+
+        for (int i = 0;
+             i < service.animais.size();
+             i++) {
+
+            System.out.println(
+                    (i + 1)
+                            + ". "
+                            + service.animais.get(i).getNome()
+            );
+        }
+
+        System.out.print("Escolha o animal: ");
+
+        int escolhaAnimal =
+                Integer.parseInt(sc.nextLine());
+
+        if (escolhaAnimal < 1
+                || escolhaAnimal > service.animais.size()) {
+
+            System.out.println("Animal inválido.");
+            return;
+        }
+
+        Animal animal =
+                service.animais.get(escolhaAnimal - 1);
+
+        // LISTAR VETERINÁRIOS
+        System.out.println("\n--- VETERINÁRIOS ---");
+
+        for (int i = 0;
+             i < service.veterinarios.size();
+             i++) {
+
+            System.out.println(
+                    (i + 1)
+                            + ". "
+                            + service.veterinarios.get(i).getNome()
+            );
+        }
+
+        System.out.print("Escolha o veterinário: ");
+
+        int escolhaVeterinario =
+                Integer.parseInt(sc.nextLine());
+
+        if (escolhaVeterinario < 1
+                || escolhaVeterinario >
+                service.veterinarios.size()) {
+
+            System.out.println(
+                    "Veterinário inválido."
+            );
+
+            return;
+        }
+
+        Veterinario veterinario =
+                service.veterinarios.get(
+                        escolhaVeterinario - 1
+                );
+
+        // DIAGNÓSTICO
+        String diagnostico;
+
+        while (true) {
+
+            System.out.print("Diagnóstico: ");
+
+            diagnostico =
+                    sc.nextLine().trim();
+
+            if (diagnostico.isEmpty()) {
+
+                System.out.println(
+                        "Diagnóstico inválido."
+                );
+
+                continue;
+            }
+
+            break;
+        }
+
         Consulta consulta = new Consulta(
-                service.animais.get(0),
-                service.veterinarios.get(0),
+                animal,
+                veterinario,
                 LocalDate.now(),
-                "Consulta geral"
+                diagnostico
         );
 
         service.adicionarConsulta(consulta);
 
-        System.out.println("Consulta registada com sucesso.");
+        System.out.println(
+                "Consulta registada com sucesso."
+        );
     }
 
     private String lerNomeValido(String mensagem) {
@@ -293,14 +412,19 @@ public class Menu {
 
             if (nome.isEmpty()) {
 
-                System.out.println("O nome não pode estar vazio.");
+                System.out.println(
+                        "O nome não pode estar vazio."
+                );
+
                 continue;
             }
 
-            // aceita apenas letras e espaços
             if (!nome.matches("[a-zA-Z ]+")) {
 
-                System.out.println("Nome inválido. Use apenas letras.");
+                System.out.println(
+                        "Nome inválido. Use apenas letras."
+                );
+
                 continue;
             }
 

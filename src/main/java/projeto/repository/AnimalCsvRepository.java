@@ -1,4 +1,3 @@
-
 package projeto.repository;
 
 import projeto.model.Animal;
@@ -9,21 +8,52 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class AnimalCsvRepository {
-
     private static final String FICHEIRO = "data/animais.csv";
-    // GUARDAR
+    // CONSTRUTOR
+
+    public AnimalCsvRepository() {
+        try {
+            // CRIAR PASTA DATA
+
+            File pasta = new File("data");
+
+            if (!pasta.exists()) {
+
+                pasta.mkdirs();
+
+            }
+
+            // CRIAR FICHEIRO CSV
+
+            File ficheiro = new File(FICHEIRO);
+
+            if (!ficheiro.exists()) {
+
+                ficheiro.createNewFile();
+
+            }
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    // GUARDAR ANIMAIS
     public void guardar(List<Animal> animais) {
 
-        try (PrintWriter writer = new PrintWriter(
-                new OutputStreamWriter(
-                        new FileOutputStream(FICHEIRO),
-                        StandardCharsets.UTF_8))) {
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FICHEIRO), StandardCharsets.UTF_8))) {
 
             for (Animal animal : animais) {
 
                 writer.println(
                         animal.getId() + ";"
-                                + animal.getNome()
+                                + animal.getNome() + ";"
+                                + animal.getEspecie() + ";"
+                                + animal.getRaca() + ";"
+                                + animal.getIdade()
                 );
             }
 
@@ -32,11 +62,10 @@ public class AnimalCsvRepository {
             System.out.println("Erro ao guardar animais.");
         }
     }
+
     public void carregar(List<Animal> animais) {
 
-        try (BufferedReader reader =
-                     new BufferedReader(
-                             new FileReader(FICHEIRO))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FICHEIRO))) {
 
             String linha;
 
@@ -51,13 +80,7 @@ public class AnimalCsvRepository {
 
                 String nome = dados[1];
 
-                Animal animal = new Cao(
-                        id,
-                        nome,
-                        "Desconhecida",
-                        0,
-                        null
-                );
+                Animal animal = new Cao(id, nome, "Desconhecida", 0, null);
 
                 animais.add(animal);
             }
