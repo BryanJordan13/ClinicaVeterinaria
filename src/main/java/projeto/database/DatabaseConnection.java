@@ -1,6 +1,5 @@
 package projeto.database;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -20,12 +19,12 @@ public class DatabaseConnection {
     // PASSWORD MYSQL
     private static final String PASSWORD = "Password1!";
 
-    // CRIAR BASE DE DADOS AUTOMATICAMENTE
+    // CRIAR BASE DE DADOS
     public static void criarBaseDeDados() {
 
         try (
 
-                Connection conn = DriverManager.getConnection(URL + "?allowPublicKeyRetrieval=true" + "&useSSL=false", USER, PASSWORD);
+                Connection conn = DriverManager.getConnection(URL + "?allowPublicKeyRetrieval=true&useSSL=false", USER, PASSWORD);
 
                 Statement stmt = conn.createStatement()
 
@@ -46,9 +45,10 @@ public class DatabaseConnection {
     // LIGAÇÃO À BASE DE DADOS
     public static Connection getConnection() throws SQLException {
 
-        return DriverManager.getConnection(URL + DATABASE + "?allowPublicKeyRetrieval=true" + "&useSSL=false", USER, PASSWORD);
+        return DriverManager.getConnection(URL + DATABASE + "?allowPublicKeyRetrieval=true&useSSL=false", USER, PASSWORD);
     }
 
+    // CRIAR TABELAS
     public static void criarTabelas() {
 
         String sqlAnimais = """
@@ -67,6 +67,38 @@ public class DatabaseConnection {
                 )
                 """;
 
+        String sqlProprietarios = """
+                CREATE TABLE IF NOT EXISTS proprietarios (
+                
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                
+                    nome VARCHAR(100)
+                
+                )
+                """;
+
+        String sqlVeterinarios = """
+                CREATE TABLE IF NOT EXISTS veterinarios (
+                
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                
+                    nome VARCHAR(100),
+                
+                    especialidade VARCHAR(100)
+                
+                )
+                """;
+
+        String sqlConsultas = """
+                CREATE TABLE IF NOT EXISTS consultas (
+                
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                
+                    descricao VARCHAR(255)
+                
+                )
+                """;
+
         try (
 
                 Connection conn = getConnection();
@@ -77,7 +109,13 @@ public class DatabaseConnection {
 
             stmt.execute(sqlAnimais);
 
-            System.out.println("Tabela animais criada!");
+            stmt.execute(sqlProprietarios);
+
+            stmt.execute(sqlVeterinarios);
+
+            stmt.execute(sqlConsultas);
+
+            System.out.println("Tabelas criadas com sucesso!");
 
         } catch (Exception e) {
 

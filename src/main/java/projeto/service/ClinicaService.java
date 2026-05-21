@@ -2,6 +2,8 @@ package projeto.service;
 
 import projeto.model.*;
 import projeto.repository.AnimalRepositoryMySQL;
+import projeto.repository.ProprietarioRepositoryMySQL;
+import projeto.repository.VeterinarioRepositoryMySQL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,12 @@ public class ClinicaService {
 
     private AnimalRepositoryMySQL repository =
             new AnimalRepositoryMySQL();
+
+    private ProprietarioRepositoryMySQL proprietarioRepository =
+            new ProprietarioRepositoryMySQL();
+
+    private VeterinarioRepositoryMySQL veterinarioRepository =
+            new VeterinarioRepositoryMySQL();
 
     public List<Animal> animais = new ArrayList<>();
     public List<Proprietario> proprietarios = new ArrayList<>();
@@ -26,11 +34,15 @@ public class ClinicaService {
     public void adicionarVeterinario(Veterinario veterinario) {
 
         veterinarios.add(veterinario);
+
+        veterinarioRepository.guardar(veterinario);
     }
 
     public void adicionarProprietario(Proprietario proprietario) {
 
         proprietarios.add(proprietario);
+
+        proprietarioRepository.guardar(proprietario);
     }
 
     public void adicionarConsulta(Consulta consulta) {
