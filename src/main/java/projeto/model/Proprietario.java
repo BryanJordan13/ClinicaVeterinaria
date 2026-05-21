@@ -12,13 +12,16 @@ public class Proprietario {
 
     public int getId() { return id; }
 
-    @Override
-    public String toString() {
-        return id + " - " + nome;
-    }
 
     public String getNome() {
         return nome;
+    }
+
+    @Override
+    public String toString() {
+
+        return "ID: " + id +
+                " | Nome: " + nome;
     }
 }
 

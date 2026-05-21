@@ -23,12 +23,15 @@ public class Menu {
         do {
 
             System.out.println("\n=== CLÍNICA VETERINÁRIA ===");
-            System.out.println("1. Registar proprietário");
-            System.out.println("2. Registar veterinário");
-            System.out.println("3. Registar Animal");
-            System.out.println("4. Registar consulta");
-            System.out.println("5. Listar animais");
-            System.out.println("6. Listar consultas");
+
+            System.out.println("1. Gestão de Animais");
+
+            System.out.println("2. Gestão de Proprietários");
+
+            System.out.println("3. Gestão de Veterinários");
+
+            System.out.println("4. Gestão de Consultas");
+
             System.out.println("0. Sair");
 
             System.out.print("Seleciona uma opção: ");
@@ -36,21 +39,21 @@ public class Menu {
 
             switch (op) {
 
-                case 1 -> registarProprietario();
+                case 1 -> menuAnimais();
 
-                case 2 -> registarVeterinario();
+                case 2 -> menuProprietarios();
 
-                case 3 -> registarAnimal();
+                case 3 -> menuVeterinarios();
 
-                case 4 -> registarConsulta();
+                case 4 -> menuConsultas();
 
-                case 5 -> service.listarAnimais();
+                case 0 -> System.out.println(
+                        "Programa terminado."
+                );
 
-                case 6 -> service.listarConsultas();
-
-                case 0 -> System.out.println("Programa terminado.");
-
-                default -> System.out.println("Opção inválida.");
+                default -> System.out.println(
+                        "Opção inválida."
+                );
             }
 
         } while (op != 0);
@@ -202,22 +205,60 @@ public class Menu {
             break;
         }
 // ---
-        System.out.println("\n--- PROPRIETÁRIOS ---");
+        Proprietario p;
 
-        for (int i = 0; i < service.proprietarios.size(); i++) {
+        System.out.println("\n=== PROPRIETÁRIOS ===");
 
-            System.out.println(
-                    (i + 1) + ". "
-                            + service.proprietarios.get(i).getNome()
-            );
+        System.out.println("1. Escolher proprietário existente");
+
+        System.out.println("2. Criar novo proprietário");
+
+        System.out.print("Opção: ");
+
+        int opcaoProprietario = Integer.parseInt(sc.nextLine());
+
+        if (opcaoProprietario == 1) {
+
+            if (service.proprietarios.isEmpty()) {
+
+                System.out.println("Não existem proprietários registados.");
+
+                return;
+            }
+
+            System.out.println("\n--- PROPRIETÁRIOS ---");
+
+            for (int i = 0; i < service.proprietarios.size(); i++) {
+
+                System.out.println((i + 1) + ". " + service.proprietarios.get(i).getNome());
+            }
+
+            System.out.print("Escolha o proprietário: ");
+
+            int escolha = Integer.parseInt(sc.nextLine());
+
+            p = service.proprietarios.get(escolha - 1);
+
+        } else if (opcaoProprietario == 2) {
+
+            String nomeProprietario = lerNomeValido("Nome do proprietário: ");
+
+            p = new Proprietario(
+
+                    service.proprietarios.size() + 1,
+
+                    nomeProprietario);
+
+            service.adicionarProprietario(p);
+
+            System.out.println("Proprietário criado com sucesso!");
+
+        } else {
+
+            System.out.println("Opção inválida.");
+
+            return;
         }
-
-        System.out.print("Escolha o proprietário: ");
-
-        int escolha = Integer.parseInt(sc.nextLine());
-
-        Proprietario p =
-                service.proprietarios.get(escolha - 1);
 
         Animal animal;
 
@@ -430,5 +471,189 @@ public class Menu {
 
             return nome;
         }
+    }
+    private void menuAnimais() {
+
+        int op;
+
+        do {
+
+            System.out.println(
+                    "\n=== GESTÃO DE ANIMAIS ==="
+            );
+
+            System.out.println(
+                    "1. Registar animal"
+            );
+
+            System.out.println(
+                    "2. Listar animais"
+            );
+
+            System.out.println(
+                    "0. Voltar"
+            );
+
+            System.out.print(
+                    "Opção: "
+            );
+
+            op = Integer.parseInt(
+                    sc.nextLine()
+            );
+
+            switch (op) {
+
+                case 1 -> registarAnimal();
+
+                case 2 -> service.listarAnimais();
+
+                case 0 -> {
+                }
+
+                default -> System.out.println(
+                        "Opção inválida."
+                );
+            }
+
+        } while (op != 0);
+    }
+    private void menuProprietarios() {
+
+        int op;
+
+        do {
+
+            System.out.println(
+                    "\n=== GESTÃO DE PROPRIETÁRIOS ==="
+            );
+
+            System.out.println(
+                    "1. Registar proprietário"
+            );
+
+            System.out.println(
+                    "2. Listar proprietários"
+            );
+
+            System.out.println(
+                    "0. Voltar"
+            );
+
+            System.out.print(
+                    "Opção: "
+            );
+
+            op = Integer.parseInt(
+                    sc.nextLine()
+            );
+
+            switch (op) {
+
+                case 1 -> registarProprietario();
+
+                case 2 -> service.listarProprietarios();
+
+                case 0 -> {
+                }
+
+                default -> System.out.println(
+                        "Opção inválida."
+                );
+            }
+
+        } while (op != 0);
+    }
+    private void menuVeterinarios() {
+
+        int op;
+
+        do {
+
+            System.out.println(
+                    "\n=== GESTÃO DE VETERINÁRIOS ==="
+            );
+
+            System.out.println(
+                    "1. Registar veterinário"
+            );
+
+            System.out.println(
+                    "2. Listar veterinários"
+            );
+
+            System.out.println(
+                    "0. Voltar"
+            );
+
+            System.out.print(
+                    "Opção: "
+            );
+
+            op = Integer.parseInt(
+                    sc.nextLine()
+            );
+
+            switch (op) {
+
+                case 1 -> registarVeterinario();
+
+                case 2 -> service.listarVeterinarios();
+
+                case 0 -> {
+                }
+
+                default -> System.out.println(
+                        "Opção inválida."
+                );
+            }
+
+        } while (op != 0);
+    }
+    private void menuConsultas() {
+
+        int op;
+
+        do {
+
+            System.out.println(
+                    "\n=== GESTÃO DE CONSULTAS ==="
+            );
+
+            System.out.println(
+                    "1. Registar consulta"
+            );
+
+            System.out.println(
+                    "2. Listar consultas"
+            );
+
+            System.out.println(
+                    "0. Voltar"
+            );
+
+            System.out.print(
+                    "Opção: "
+            );
+
+            op = Integer.parseInt(
+                    sc.nextLine()
+            );
+
+            switch (op) {
+
+                case 1 -> registarConsulta();
+
+                case 2 -> service.listarConsultas();
+
+                case 0 -> {
+                }
+
+                default -> System.out.println(
+                        "Opção inválida."
+                );
+            }
+
+        } while (op != 0);
     }
 }

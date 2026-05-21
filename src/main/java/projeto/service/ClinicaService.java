@@ -4,6 +4,7 @@ import projeto.model.*;
 import projeto.repository.AnimalRepositoryMySQL;
 import projeto.repository.ProprietarioRepositoryMySQL;
 import projeto.repository.VeterinarioRepositoryMySQL;
+import projeto.repository.ConsultaRepositoryMySQL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,15 @@ public class ClinicaService {
     private VeterinarioRepositoryMySQL veterinarioRepository =
             new VeterinarioRepositoryMySQL();
 
+    private ConsultaRepositoryMySQL consultaRepository =
+            new ConsultaRepositoryMySQL();
+
+
     public List<Animal> animais = new ArrayList<>();
     public List<Proprietario> proprietarios = new ArrayList<>();
     public List<Veterinario> veterinarios = new ArrayList<>();
     public List<Consulta> consultas = new ArrayList<>();
+
 
     public void adicionarAnimal(Animal animal) {
 
@@ -48,6 +54,8 @@ public class ClinicaService {
     public void adicionarConsulta(Consulta consulta) {
 
         consultas.add(consulta);
+
+        consultaRepository.guardar(consulta);
     }
 
     public void listarAnimais() {
@@ -75,6 +83,43 @@ public class ClinicaService {
         for(Consulta consulta : consultas) {
 
             System.out.println(consulta);
+        }
+    }
+    public void carregarAnimaisDaBD() {
+
+        animais = repository.buscarTodos();
+    }
+    public void listarProprietarios() {
+
+        if(proprietarios.isEmpty()) {
+
+            System.out.println(
+                    "Não existem proprietários."
+            );
+
+            return;
+        }
+
+        for(Proprietario p : proprietarios) {
+
+            System.out.println(p);
+        }
+    }
+
+    public void listarVeterinarios() {
+
+        if(veterinarios.isEmpty()) {
+
+            System.out.println(
+                    "Não existem veterinários."
+            );
+
+            return;
+        }
+
+        for(Veterinario v : veterinarios) {
+
+            System.out.println(v);
         }
     }
 }

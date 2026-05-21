@@ -3,6 +3,13 @@ package projeto.repository;
 import projeto.database.DatabaseConnection;
 import projeto.model.Animal;
 
+import projeto.model.Cao;
+import projeto.model.Proprietario;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -12,8 +19,8 @@ public class AnimalRepositoryMySQL {
 
         String sql = """
                 INSERT INTO animais
-                (nome, especie, raca, idade)
-                VALUES (?, ?, ?, ?)
+                (nome, especie, raca, idade, proprietario_id)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (
@@ -32,6 +39,8 @@ public class AnimalRepositoryMySQL {
 
             stmt.setInt(4, animal.getIdade());
 
+            stmt.setInt(5, animal.getProprietario().getId());
+
             stmt.executeUpdate();
 
             System.out.println("Animal guardado na BD!");
@@ -40,5 +49,48 @@ public class AnimalRepositoryMySQL {
 
             e.printStackTrace();
         }
+    }
+
+    public List<Animal> buscarTodos() {
+
+        List<Animal> animais = new ArrayList<>();
+
+        String sql = "SELECT * FROM animais";
+
+        try (
+
+                Connection conn = DatabaseConnection.getConnection();
+
+                PreparedStatement stmt = conn.prepareStatement(sql);
+
+                ResultSet rs = stmt.executeQuery()
+
+        ) {
+
+            while (rs.next()) {
+
+                int id = rs.getInt("id");
+
+                String nome = rs.getString("nome");
+
+                String especie = rs.getString("especie");
+
+                String raca = rs.getString("raca");
+
+                int idade = rs.getInt("idade");
+
+                Proprietario p = new Proprietario(0, "Desconhecido");
+
+                Animal animal = new Cao(id, nome, raca, idade, p);
+
+                animais.add(animal);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return animais;
     }
 }

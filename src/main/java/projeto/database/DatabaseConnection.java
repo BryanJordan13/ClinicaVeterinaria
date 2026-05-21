@@ -34,7 +34,7 @@ public class DatabaseConnection {
 
             stmt.executeUpdate(sql);
 
-            System.out.println("Base de dados criada com sucesso.");
+            System.out.println("Base de dados criada com sucesso!");
 
         } catch (SQLException e) {
 
@@ -45,12 +45,45 @@ public class DatabaseConnection {
     // LIGAÇÃO À BASE DE DADOS
     public static Connection getConnection() throws SQLException {
 
-        return DriverManager.getConnection(URL + DATABASE + "?allowPublicKeyRetrieval=true&useSSL=false", USER, PASSWORD);
+        return DriverManager.getConnection(
+
+                URL + DATABASE + "?allowPublicKeyRetrieval=true&useSSL=false",
+
+                USER,
+
+                PASSWORD);
     }
 
     // CRIAR TABELAS
     public static void criarTabelas() {
 
+        // TABELA PROPRIETÁRIOS
+        String sqlProprietarios = """
+                CREATE TABLE IF NOT EXISTS proprietarios (
+                
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                
+                    nome VARCHAR(100)
+                
+                )
+                """;
+
+        // TABELA VETERINÁRIOS
+        String sqlVeterinarios = """
+                CREATE TABLE IF NOT EXISTS veterinarios (
+                
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                
+                    nome VARCHAR(100),
+                
+                    especialidade VARCHAR(100),
+                
+                    cedula_profissional VARCHAR(100)
+                
+                )
+                """;
+
+        // TABELA ANIMAIS
         String sqlAnimais = """
                 CREATE TABLE IF NOT EXISTS animais (
                 
@@ -62,39 +95,35 @@ public class DatabaseConnection {
                 
                     raca VARCHAR(100),
                 
-                    idade INT
+                    idade INT,
+                
+                    proprietario_id INT,
+                
+                    FOREIGN KEY (proprietario_id)
+                    REFERENCES proprietarios(id)
                 
                 )
                 """;
 
-        String sqlProprietarios = """
-                CREATE TABLE IF NOT EXISTS proprietarios (
-                
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                
-                    nome VARCHAR(100)
-                
-                )
-                """;
-
-        String sqlVeterinarios = """
-                CREATE TABLE IF NOT EXISTS veterinarios (
-                
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                
-                    nome VARCHAR(100),
-                
-                    especialidade VARCHAR(100)
-                
-                )
-                """;
-
+        // TABELA CONSULTAS
         String sqlConsultas = """
                 CREATE TABLE IF NOT EXISTS consultas (
                 
                     id INT PRIMARY KEY AUTO_INCREMENT,
                 
-                    descricao VARCHAR(255)
+                    animal_id INT,
+                
+                    veterinario_id INT,
+                
+                    diagnostico VARCHAR(255),
+                
+                    data DATE,
+                
+                    FOREIGN KEY (animal_id)
+                    REFERENCES animais(id),
+                
+                    FOREIGN KEY (veterinario_id)
+                    REFERENCES veterinarios(id)
                 
                 )
                 """;
@@ -107,11 +136,13 @@ public class DatabaseConnection {
 
         ) {
 
-            stmt.execute(sqlAnimais);
+            // ORDEM IMPORTANTE
 
             stmt.execute(sqlProprietarios);
 
             stmt.execute(sqlVeterinarios);
+
+            stmt.execute(sqlAnimais);
 
             stmt.execute(sqlConsultas);
 
