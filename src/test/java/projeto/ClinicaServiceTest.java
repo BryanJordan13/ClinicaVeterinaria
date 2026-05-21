@@ -26,8 +26,12 @@ public class ClinicaServiceTest {
     void adicionarVeterinario() {
         ClinicaService service = new ClinicaService();
 
-        Veterinario v = new Veterinario(1, "Ana", "Cirurgia");
-
+        Veterinario v = new Veterinario(
+                1,
+                "Ana",
+                "Cirurgia",
+                "CED123"
+        );
         service.adicionarVeterinario(v);
 
         assertEquals(1, service.veterinarios.size());

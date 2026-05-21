@@ -1,15 +1,15 @@
 package projeto.service;
 
 import projeto.model.*;
-import projeto.repository.AnimalCsvRepository;
+import projeto.repository.AnimalRepositoryMySQL;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClinicaService {
 
-    private AnimalCsvRepository repository =
-            new AnimalCsvRepository();
+    private AnimalRepositoryMySQL repository =
+            new AnimalRepositoryMySQL();
 
     public List<Animal> animais = new ArrayList<>();
     public List<Proprietario> proprietarios = new ArrayList<>();
@@ -20,7 +20,7 @@ public class ClinicaService {
 
         animais.add(animal);
 
-        repository.guardar(animais);
+        repository.guardarAnimal(animal);
     }
 
     public void adicionarVeterinario(Veterinario veterinario) {

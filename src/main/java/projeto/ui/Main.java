@@ -1,22 +1,20 @@
 package projeto.ui;
 
-import projeto.repository.AnimalCsvRepository;
+import projeto.database.DatabaseConnection;
 import projeto.service.ClinicaService;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        // CRIAR BASE DE DADOS
+        DatabaseConnection.criarBaseDeDados();
+
+        // CRIAR TABELAS
+        DatabaseConnection.criarTabelas();
+
         ClinicaService service = new ClinicaService();
 
-        // CARREGAR CSV
-        AnimalCsvRepository repository =
-                new AnimalCsvRepository();
-
-        repository.carregar(service.animais);
-        System.out.println(service.animais.size());
-
-        // MENU
         Menu menu = new Menu(service);
 
         menu.iniciar();
