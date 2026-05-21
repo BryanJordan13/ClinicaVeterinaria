@@ -9,19 +9,16 @@ import projeto.repository.ConsultaRepositoryMySQL;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ClinicaService {
 
-    private AnimalRepositoryMySQL repository =
-            new AnimalRepositoryMySQL();
+    private AnimalRepositoryMySQL repository = new AnimalRepositoryMySQL();
 
-    private ProprietarioRepositoryMySQL proprietarioRepository =
-            new ProprietarioRepositoryMySQL();
+    private ProprietarioRepositoryMySQL proprietarioRepository = new ProprietarioRepositoryMySQL();
 
-    private VeterinarioRepositoryMySQL veterinarioRepository =
-            new VeterinarioRepositoryMySQL();
+    private VeterinarioRepositoryMySQL veterinarioRepository = new VeterinarioRepositoryMySQL();
 
-    private ConsultaRepositoryMySQL consultaRepository =
-            new ConsultaRepositoryMySQL();
+    private ConsultaRepositoryMySQL consultaRepository = new ConsultaRepositoryMySQL();
 
 
     public List<Animal> animais = new ArrayList<>();
@@ -60,13 +57,13 @@ public class ClinicaService {
 
     public void listarAnimais() {
 
-        if(animais.isEmpty()) {
+        if (animais.isEmpty()) {
 
             System.out.println("Não existem animais registados.");
             return;
         }
 
-        for(Animal animal : animais) {
+        for (Animal animal : animais) {
 
             System.out.println(animal);
         }
@@ -74,52 +71,177 @@ public class ClinicaService {
 
     public void listarConsultas() {
 
-        if(consultas.isEmpty()) {
+        if (consultas.isEmpty()) {
 
             System.out.println("Não existem consultas.");
             return;
         }
 
-        for(Consulta consulta : consultas) {
+        int contador = 1;
+
+        for (Consulta consulta : consultas) {
+
+            System.out.println("\nCONSULTA #" + contador++);
 
             System.out.println(consulta);
         }
     }
+
     public void carregarAnimaisDaBD() {
 
         animais = repository.buscarTodos();
     }
+
     public void listarProprietarios() {
 
-        if(proprietarios.isEmpty()) {
+        if (proprietarios.isEmpty()) {
 
-            System.out.println(
-                    "Não existem proprietários."
-            );
+            System.out.println("Não existem proprietários.");
 
             return;
         }
 
-        for(Proprietario p : proprietarios) {
+        for (Proprietario p : proprietarios) {
 
             System.out.println(p);
         }
     }
 
+    public void carregarProprietariosDaBD() {
+
+        proprietarios = proprietarioRepository.buscarTodos();
+    }
+
+
     public void listarVeterinarios() {
 
-        if(veterinarios.isEmpty()) {
+        if (veterinarios.isEmpty()) {
 
-            System.out.println(
-                    "Não existem veterinários."
-            );
+            System.out.println("Não existem veterinários.");
 
             return;
         }
 
-        for(Veterinario v : veterinarios) {
+        for (Veterinario v : veterinarios) {
 
             System.out.println(v);
         }
+    }
+
+    public void carregarVeterinariosDaBD() {
+
+        veterinarios = veterinarioRepository.buscarTodos();
+    }
+
+    public void carregarConsultasDaBD() {
+
+        consultas = consultaRepository.buscarTodos(animais, veterinarios);
+    }
+
+    public void mostrarHistoricoAnimal(Animal animal) {
+
+        boolean encontrou = false;
+
+        for (Consulta consulta : consultas) {
+
+            if (consulta.getAnimal().getId() == animal.getId()) {
+
+                System.out.println(consulta);
+
+                encontrou = true;
+            }
+        }
+
+        if (!encontrou) {
+
+            System.out.println("Este animal não possui consultas.");
+        }
+    }
+
+    public String especieMaisComum() {
+
+        if (animais.isEmpty()) {
+
+            return "Sem dados";
+        }
+
+        int caes = 0;
+
+        int gatos = 0;
+
+        int aves = 0;
+
+        for (Animal animal : animais) {
+
+            switch (animal.getEspecie().toLowerCase()) {
+
+                case "cão":
+                case "cao":
+
+                    caes++;
+                    break;
+
+                case "gato":
+
+                    gatos++;
+                    break;
+
+                case "ave":
+
+                    aves++;
+                    break;
+            }
+        }
+
+        if (caes >= gatos && caes >= aves) {
+
+            return "Cão";
+        }
+
+        if (gatos >= caes && gatos >= aves) {
+
+            return "Gato";
+        }
+
+        return "Ave";
+    }
+
+    public String veterinarioMaisConsultas() {
+
+        if (consultas.isEmpty()) {
+
+            return "Sem consultas";
+        }
+
+        Veterinario melhor = null;
+
+        int max = 0;
+
+        for (Veterinario v : veterinarios) {
+
+            int contador = 0;
+
+            for (Consulta c : consultas) {
+
+                if (c.getVeterinario().getId() == v.getId()) {
+
+                    contador++;
+                }
+            }
+
+            if (contador > max) {
+
+                max = contador;
+
+                melhor = v;
+            }
+        }
+
+        if (melhor == null) {
+
+            return "Sem dados";
+        }
+
+        return melhor.getNome() + " (" + max + " consultas)";
     }
 }

@@ -5,6 +5,10 @@ import projeto.model.Proprietario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProprietarioRepositoryMySQL {
 
@@ -33,5 +37,40 @@ public class ProprietarioRepositoryMySQL {
 
             e.printStackTrace();
         }
+    }
+
+    public List<Proprietario> buscarTodos() {
+
+        List<Proprietario> proprietarios = new ArrayList<>();
+
+        String sql = "SELECT * FROM proprietarios";
+
+        try (
+
+                Connection conn = DatabaseConnection.getConnection();
+
+                PreparedStatement stmt = conn.prepareStatement(sql);
+
+                ResultSet rs = stmt.executeQuery()
+
+        ) {
+
+            while (rs.next()) {
+
+                Proprietario p = new Proprietario(
+
+                        rs.getInt("id"),
+
+                        rs.getString("nome"));
+
+                proprietarios.add(p);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return proprietarios;
     }
 }
