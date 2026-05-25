@@ -64,7 +64,7 @@ public class Menu {
 
         service.adicionarProprietario(proprietario);
 
-        System.out.println("Proprietário registado .");
+        System.out.println("Proprietário registado com sucesso.");
 
         // pergunta se deseja registar animal
         System.out.print("Deseja registar um animal agora? (s/n): ");
