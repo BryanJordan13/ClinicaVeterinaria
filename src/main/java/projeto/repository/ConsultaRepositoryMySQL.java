@@ -19,36 +19,32 @@ public class ConsultaRepositoryMySQL {
     public void guardar(Consulta consulta) {
 
         String sql = """
-                INSERT INTO consultas
-                (animal_id, veterinario_id, diagnostico, data)
-                VALUES (?, ?, ?, ?)
-                """;
+            INSERT INTO consultas
+            (animal_id, veterinario_id, diagnostico, data, emitir_fatura, contribuinte)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
 
         try (
-
                 Connection conn = DatabaseConnection.getConnection();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
-
         ) {
 
             stmt.setInt(1, consulta.getAnimal().getId());
-
             stmt.setInt(2, consulta.getVeterinario().getId());
-
             stmt.setString(3, consulta.getDescricao());
-
             stmt.setDate(4, java.sql.Date.valueOf(consulta.getData()));
+            stmt.setBoolean(5, consulta.isEmitirFatura());
+            stmt.setString(6, consulta.getContribuinte());
 
             stmt.executeUpdate();
 
             System.out.println("Consulta guardada!");
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
     }
+
 
     public List<Consulta> buscarTodos(List<Animal> animais, List<Veterinario> veterinarios) {
 
@@ -57,34 +53,27 @@ public class ConsultaRepositoryMySQL {
         String sql = "SELECT * FROM consultas";
 
         try (
-
                 Connection conn = DatabaseConnection.getConnection();
-
                 PreparedStatement stmt = conn.prepareStatement(sql);
-
                 ResultSet rs = stmt.executeQuery()
-
         ) {
 
             while (rs.next()) {
 
                 int animalId = rs.getInt("animal_id");
-
                 int veterinarioId = rs.getInt("veterinario_id");
-
                 String diagnostico = rs.getString("diagnostico");
-
                 LocalDate data = rs.getDate("data").toLocalDate();
 
-                Animal animal = null;
+                boolean emitirFatura = rs.getBoolean("emitir_fatura");
+                String contribuinte = rs.getString("contribuinte");
 
+                Animal animal = null;
                 Veterinario veterinario = null;
 
                 // PROCURAR ANIMAL
                 for (Animal a : animais) {
-
                     if (a.getId() == animalId) {
-
                         animal = a;
                         break;
                     }
@@ -92,9 +81,7 @@ public class ConsultaRepositoryMySQL {
 
                 // PROCURAR VETERINÁRIO
                 for (Veterinario v : veterinarios) {
-
                     if (v.getId() == veterinarioId) {
-
                         veterinario = v;
                         break;
                     }
@@ -103,17 +90,24 @@ public class ConsultaRepositoryMySQL {
                 // CRIAR CONSULTA
                 if (animal != null && veterinario != null) {
 
-                    Consulta consulta = new Consulta(animal, veterinario, data, diagnostico);
+                    Consulta consulta = new Consulta(
+                            animal,
+                            veterinario,
+                            data,
+                            diagnostico,
+                            emitirFatura,
+                            contribuinte
+                    );
 
                     consultas.add(consulta);
                 }
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
         return consultas;
     }
+
 }

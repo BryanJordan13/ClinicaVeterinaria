@@ -361,7 +361,35 @@ public class Menu {
             break;
         }
 
-        Consulta consulta = new Consulta(animal, veterinario, LocalDate.now(), diagnostico);
+// ================================
+        // NOVO — EMITIR FATURA?
+        // ================================
+        System.out.print("Emitir fatura (s/n): ");
+        String opc = sc.nextLine().trim().toLowerCase();
+
+        boolean emitirFatura = opc.equals("s");
+        String contribuinte = "";
+
+        if (emitirFatura) {
+            while (true) {
+                System.out.print("Contribuinte (9 dígitos): ");
+                contribuinte = sc.nextLine().trim();
+
+                if (contribuinte.matches("\\d{9}")) break;
+
+                System.out.println("Contribuinte inválido. Deve ter 9 dígitos numéricos.");
+            }
+        }
+
+        // CRIAR CONSULTA COM OS NOVOS CAMPOS
+        Consulta consulta = new Consulta(
+                animal,
+                veterinario,
+                LocalDate.now(),
+                diagnostico,
+                emitirFatura,
+                contribuinte
+        );
 
         service.adicionarConsulta(consulta);
 
