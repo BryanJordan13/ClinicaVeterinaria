@@ -6,8 +6,6 @@ public class TesteDBeaver {
 
     public static void main(String[] args) {
 
-        // CRIAR BASE DE DADOS
-        DatabaseConnection.criarBaseDeDados();
 
         // CRIAR TABELAS
         DatabaseConnection.criarTabelas();

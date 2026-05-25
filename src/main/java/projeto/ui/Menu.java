@@ -3,6 +3,7 @@ package projeto.ui;
 import projeto.model.*;
 import projeto.service.ClinicaService;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -10,6 +11,10 @@ public class Menu {
 
     private Scanner sc = new Scanner(System.in);
     private ClinicaService service;
+    private final String ADMIN_USER = "admin";
+    private final String ADMIN_PASSWORD = "1234";
+    private final String VET_USER = "vet";
+    private final String VET_PASSWORD = "vet123";
 
     public Menu(ClinicaService service) {
         this.service = service;
@@ -583,6 +588,12 @@ public class Menu {
 
     private void menuAdmin() {
 
+        // LOGIN
+        if (!menuLogin()) {
+
+            return;
+        }
+
         int op;
 
         do {
@@ -613,6 +624,8 @@ public class Menu {
 
         } while (op != 0);
     }
+
+
 
     private void menuRelatorios() {
 
@@ -649,5 +662,93 @@ public class Menu {
             }
 
         } while (op != 0);
+    }
+
+
+    private boolean loginSistema(String utilizadorCorreto, String passwordCorreta) {
+
+        int tentativas = 3;
+
+        while (tentativas > 0) {
+
+            System.out.print("Username: ");
+
+            String user = sc.nextLine();
+
+            String password;
+
+            Console console = System.console();
+
+            if (console != null) {
+
+                char[] passwordChars = console.readPassword("Password: ");
+
+                password = new String(passwordChars);
+
+            } else {
+
+                System.out.print("Password: ");
+
+                password = sc.nextLine();
+            }
+
+            if (user.equals(utilizadorCorreto) && password.equals(passwordCorreta)) {
+
+                System.out.println("Login efetuado com sucesso!");
+
+                return true;
+            }
+
+            tentativas--;
+
+            System.out.println("Credenciais inválidas!");
+
+            if (tentativas > 0) {
+
+                System.out.println("Tentativas restantes: " + tentativas);
+            }
+        }
+
+        System.out.println("Acesso bloqueado!");
+
+        return false;
+    }
+
+    private boolean menuLogin() {
+
+        int op;
+
+        System.out.println("\n=== LOGIN ===");
+
+        System.out.println("1. Admin");
+
+        System.out.println("2. Veterinário");
+
+        System.out.println("0. Voltar");
+
+        System.out.print("Opção: ");
+
+        op = Integer.parseInt(sc.nextLine());
+
+        switch (op) {
+
+            case 1:
+
+                return loginSistema(ADMIN_USER, ADMIN_PASSWORD);
+
+            case 2:
+
+                return loginSistema(VET_USER, VET_PASSWORD);
+
+            case 0:
+
+                return false;
+
+            default:
+
+                System.out.println("Opção inválida.");
+
+                return false;
+        }
     }
 }

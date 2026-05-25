@@ -8,50 +8,25 @@ import java.sql.Statement;
 public class DatabaseConnection {
 
     // SERVIDOR MYSQL
-    private static final String URL = "jdbc:mysql://localhost:3306/";
-
-    // NOME DA BASE DE DADOS
-    private static final String DATABASE = "clinica_veterinaria";
+    private static final String URL =
+            "jdbc:mysql://zephyr.proxy.rlwy.net:52428/railway?allowPublicKeyRetrieval=true&useSSL=false";
 
     // UTILIZADOR MYSQL
     private static final String USER = "root";
 
     // PASSWORD MYSQL
-    private static final String PASSWORD = "Password1!";
+    private static final String PASSWORD = "lKDepECjJrRrtIFwytmHvRmjhwRIkGWA";
 
     // CRIAR BASE DE DADOS
-    public static void criarBaseDeDados() {
-
-        try (
-
-                Connection conn = DriverManager.getConnection(URL + "?allowPublicKeyRetrieval=true&useSSL=false", USER, PASSWORD);
-
-                Statement stmt = conn.createStatement()
-
-        ) {
-
-            String sql = "CREATE DATABASE IF NOT EXISTS " + DATABASE;
-
-            stmt.executeUpdate(sql);
-
-            System.out.println("Base de dados criada com sucesso!");
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
 
     // LIGAÇÃO À BASE DE DADOS
     public static Connection getConnection() throws SQLException {
 
         return DriverManager.getConnection(
-
-                URL + DATABASE + "?allowPublicKeyRetrieval=true&useSSL=false",
-
+                URL,
                 USER,
-
-                PASSWORD);
+                PASSWORD
+        );
     }
 
     // CRIAR TABELAS
