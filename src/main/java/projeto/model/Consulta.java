@@ -9,17 +9,24 @@ public class Consulta {
     private LocalDate data;
     private String diagnostico;
 
+    private boolean emitirFatura;   // NOVO
+    private String contribuinte;    // NOVO
+
     public Consulta(
             Animal animal,
             Veterinario veterinario,
             LocalDate data,
-            String diagnostico
+            String diagnostico,
+            boolean emitirFatura,
+            String contribuinte
     ) {
 
         this.animal = animal;
         this.veterinario = veterinario;
         this.data = data;
         this.diagnostico = diagnostico;
+        this.emitirFatura = emitirFatura;
+        this.contribuinte = contribuinte;
     }
 
     @Override
@@ -32,6 +39,8 @@ public class Consulta {
                 + "\n🪪 Cédula: " + veterinario.getCedulaProfissional()
                 + "\n📅 Data: " + data
                 + "\n📋 Diagnóstico: " + diagnostico
+                + "\n💶 Emitir Fatura: " + (emitirFatura ? "Sim" : "Não")
+                + (emitirFatura ? "\n🔢 Contribuinte: " + contribuinte : "")
                 + "\n==============================";
     }
 
@@ -49,5 +58,13 @@ public class Consulta {
 
     public LocalDate getData() {
         return data;
+    }
+
+    public boolean isEmitirFatura() {
+        return emitirFatura;
+    }
+
+    public String getContribuinte() {
+        return contribuinte;
     }
 }
