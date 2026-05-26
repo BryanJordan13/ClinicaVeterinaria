@@ -1,12 +1,12 @@
 package projeto.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Consulta {
 
     private Animal animal;
     private Veterinario veterinario;
-    private LocalDate data;
+    private LocalDateTime dataHora;
     private String diagnostico;
     private String observacoes;
     private String tratamento;
@@ -22,7 +22,7 @@ public class Consulta {
     public Consulta(
             Animal animal,
             Veterinario veterinario,
-            LocalDate data,
+            LocalDateTime dataHora,
             String diagnostico,
             boolean emitirFatura,
             String contribuinte
@@ -30,7 +30,7 @@ public class Consulta {
 
         this.animal = animal;
         this.veterinario = veterinario;
-        this.data = data;
+        this.dataHora = dataHora;
         this.diagnostico = diagnostico;
         this.emitirFatura = emitirFatura;
         this.contribuinte = contribuinte;
@@ -42,7 +42,7 @@ public class Consulta {
         return "\n=============================="
                 + "\n🐾 Animal: " + animal.getNome()
                 + "\n👨‍⚕️ Veterinário: " + veterinario.getNome()
-                + "\n📅 Data: " + data
+                + "\n📅 Data: " + dataHora
                 + "\n📋 Diagnóstico: " + diagnostico
                 + "\n==============================";
     }
@@ -62,7 +62,7 @@ public class Consulta {
 
         return "\n=========== FATURA ==========="
                 + "\n🐾 Animal: " + animal.getNome()
-                + "\n📅 Data: " + data
+                + "\n📅 Data: " + dataHora
                 + "\n💰 Consulta: " + valorConsulta + "€"
                 + "\n💊 Medicação: " + valorMedicacao + "€"
                 + "\n🧪 Exames: " + valorExames + "€"
@@ -84,10 +84,9 @@ public class Consulta {
         return veterinario;
     }
 
-    public LocalDate getData() {
-        return data;
+    public LocalDateTime getDataHora() {
+        return dataHora;
     }
-
     public boolean isEmitirFatura() {
         return emitirFatura;
     }

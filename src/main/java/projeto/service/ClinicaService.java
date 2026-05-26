@@ -244,4 +244,40 @@ public class ClinicaService {
 
         return melhor.getNome() + " (" + max + " consultas)";
     }
+
+    public double calcularFaturacaoTotal() {
+
+        double total = 0;
+
+        for (Consulta c : consultas) {
+
+            total += c.calcularTotal();
+        }
+
+        return total;
+    }
+    public void mostrarDashboard() {
+
+        System.out.println("\n========== DASHBOARD ==========");
+
+        System.out.println("🐾 Total Animais: "
+                + animais.size());
+
+        System.out.println("📋 Total Consultas: "
+                + consultas.size());
+
+        System.out.println("👨‍⚕️ Total Veterinários: "
+                + veterinarios.size());
+
+        System.out.println("💰 Faturação Total: "
+                + calcularFaturacaoTotal() + "€");
+
+        System.out.println("🐶 Espécie mais comum: "
+                + especieMaisComum());
+
+        System.out.println("🏆 Veterinário com mais consultas: "
+                + veterinarioMaisConsultas());
+
+        System.out.println("================================");
+    }
 }

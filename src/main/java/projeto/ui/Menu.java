@@ -2,10 +2,11 @@ package projeto.ui;
 
 import projeto.model.*;
 import projeto.service.ClinicaService;
-
+import java.time.LocalDateTime;
 import java.io.Console;
 import java.time.LocalDate;
 import java.util.Scanner;
+import projeto.utils.PdfExporter;
 
 public class Menu {
 
@@ -288,11 +289,11 @@ public class Menu {
                 };
         }
 
-
         service.adicionarAnimal(animal);
 
         System.out.println("Animal registado com sucesso.");
     }
+
 
     private void registarConsulta() {
 
@@ -310,7 +311,7 @@ public class Menu {
             return;
         }
 
-        // LISTAR ANIMAIS
+                            // LISTAR ANIMAIS
         System.out.println("\n--- ANIMAIS ---");
 
         for (int i = 0; i < service.animais.size(); i++) {
@@ -350,6 +351,18 @@ public class Menu {
         }
 
         Veterinario veterinario = service.veterinarios.get(escolhaVeterinario - 1);
+            System.out.print("Data (AAAA-MM-DD): ");
+
+            String data = sc.nextLine();
+
+            System.out.print("Hora (HH:MM): ");
+
+            String hora = sc.nextLine();
+
+            LocalDateTime dataHora =
+                    LocalDateTime.parse(
+                            data + "T" + hora
+                    );
 
         // DIAGNÓSTICO
         String diagnostico;
@@ -391,7 +404,7 @@ public class Menu {
         }
 
         // CRIAR CONSULTA COM OS NOVOS CAMPOS
-        Consulta consulta = new Consulta(animal, veterinario, LocalDate.now(), diagnostico, emitirFatura, contribuinte);
+        Consulta consulta = new Consulta(animal, veterinario, dataHora, diagnostico, emitirFatura, contribuinte);
 
         service.adicionarConsulta(consulta);
 
@@ -625,9 +638,11 @@ public class Menu {
 
             System.out.println("\n=== PAINEL ADMINISTRATIVO ===");
 
-            System.out.println("1. Estatísticas");
+            System.out.println("1. Dashboard");
 
-            System.out.println("2. Gestão Financeira");
+            System.out.println("2. Estatísticas");
+
+            System.out.println("3. Gestão Financeira");
 
             System.out.println("0. Voltar");
 
@@ -637,9 +652,11 @@ public class Menu {
 
             switch (op) {
 
-                case 1 -> menuEstatisticas();
+                case 1 -> service.mostrarDashboard();
 
-                case 2 -> menuFinanceiro();
+                case 2 -> menuEstatisticas();
+
+                case 3 -> menuFinanceiro();
 
                 case 0 -> {
                 }
@@ -880,6 +897,15 @@ public class Menu {
         System.out.println(
                 consulta.gerarFatura()
         );
+
+        System.out.print("Exportar PDF? (s/n): ");
+
+        String resposta = sc.nextLine();
+
+        if(resposta.equalsIgnoreCase("s")) {
+
+            PdfExporter.exportarFatura(consulta);
+        }
     }
     private void menuVet() {
 

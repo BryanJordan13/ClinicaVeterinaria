@@ -2,7 +2,8 @@ package projeto.repository;
 
 import projeto.database.DatabaseConnection;
 import projeto.model.Animal;
-
+import projeto.model.Gato;
+import projeto.model.Ave;
 import projeto.model.Cao;
 import projeto.model.Proprietario;
 
@@ -55,7 +56,13 @@ public class AnimalRepositoryMySQL {
 
         List<Animal> animais = new ArrayList<>();
 
-        String sql = "SELECT * FROM animais";
+        String sql = """
+    SELECT a.*,
+           p.nome AS nome_proprietario
+    FROM animais a
+    JOIN proprietarios p
+    ON a.proprietario_id = p.id
+    """;
 
         try (
 
@@ -79,9 +86,59 @@ public class AnimalRepositoryMySQL {
 
                 int idade = rs.getInt("idade");
 
-                Proprietario p = new Proprietario(0, "Desconhecido");
+                int proprietarioId =
+                        rs.getInt("proprietario_id");
 
-                Animal animal = new Cao(id, nome, raca, idade, p);
+                String nomeProprietario =
+                        rs.getString("nome_proprietario");
+
+                Proprietario p =
+                        new Proprietario(
+                                proprietarioId,
+                                nomeProprietario
+                        );
+
+                Animal animal;
+
+                switch (especie.toLowerCase()) {
+
+                    case "cão":
+                    case "cao":
+
+                        animal = new Cao(id, nome, raca, idade, p);
+
+                        break;
+
+                    case "gato":
+
+                        animal = new Gato(id, nome, raca, idade, p);
+
+                        break;
+
+                    case "ave":
+
+                        animal = new Ave(id, nome, raca, idade, p);
+
+                        break;
+
+                    default:
+
+                        animal = new Animal(
+                                id,
+                                nome,
+                                especie,
+                                raca,
+                                idade,
+                                p
+                        ) {
+
+                            @Override
+                            public String emitirSom() {
+
+                                return "Som desconhecido";
+                            }
+                        };
+                }
 
                 animais.add(animal);
             }
