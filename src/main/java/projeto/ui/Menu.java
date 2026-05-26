@@ -26,15 +26,17 @@ public class Menu {
 
         do {
 
-            System.out.println("1. Menu Admin");
+            System.out.println("1. Gestão de Animais");
 
-            System.out.println("2. Gestão de Animais");
+            System.out.println("2. Gestão de Proprietários");
 
-            System.out.println("3. Gestão de Proprietários");
+            System.out.println("3. Gestão de Veterinários");
 
-            System.out.println("4. Gestão de Veterinários");
+            System.out.println("4. Gestão de Consultas");
 
-            System.out.println("5. Gestão de Consultas");
+            System.out.println("5. Painel Veterinário");
+
+            System.out.println("6. Painel Administrativo");
 
             System.out.println("0. Sair");
 
@@ -43,15 +45,17 @@ public class Menu {
 
             switch (op) {
 
-                case 1 -> menuAdmin();
+                case 1 -> menuAnimais();
 
-                case 2 -> menuAnimais();
+                case 2 -> menuProprietarios();
 
-                case 3 -> menuProprietarios();
+                case 3 -> menuVeterinarios();
 
-                case 4 -> menuVeterinarios();
+                case 4 -> menuConsultas();
 
-                case 5 -> menuConsultas();
+                case 5 -> menuVet();
+
+                case 6 -> menuAdmin();
 
                 case 0 -> System.out.println("Programa terminado.");
 
@@ -387,14 +391,7 @@ public class Menu {
         }
 
         // CRIAR CONSULTA COM OS NOVOS CAMPOS
-        Consulta consulta = new Consulta(
-                animal,
-                veterinario,
-                LocalDate.now(),
-                diagnostico,
-                emitirFatura,
-                contribuinte
-        );
+        Consulta consulta = new Consulta(animal, veterinario, LocalDate.now(), diagnostico, emitirFatura, contribuinte);
 
         service.adicionarConsulta(consulta);
 
@@ -617,7 +614,7 @@ public class Menu {
     private void menuAdmin() {
 
         // LOGIN
-        if (!menuLogin()) {
+        if (!loginSistema(ADMIN_USER, ADMIN_PASSWORD)) {
 
             return;
         }
@@ -626,11 +623,11 @@ public class Menu {
 
         do {
 
-            System.out.println("\n=== MENU ADMIN ===");
+            System.out.println("\n=== PAINEL ADMINISTRATIVO ===");
 
-            System.out.println("1. Relatórios");
+            System.out.println("1. Estatísticas");
 
-            System.out.println("2. Estatísticas");
+            System.out.println("2. Gestão Financeira");
 
             System.out.println("0. Voltar");
 
@@ -640,9 +637,9 @@ public class Menu {
 
             switch (op) {
 
-                case 1 -> menuRelatorios();
+                case 1 -> menuEstatisticas();
 
-                case 2 -> menuEstatisticas();
+                case 2 -> menuFinanceiro();
 
                 case 0 -> {
                 }
@@ -654,8 +651,7 @@ public class Menu {
     }
 
 
-
-    private void menuRelatorios() {
+    private void RelatoriosClinicos() {
 
         int op;
 
@@ -778,5 +774,148 @@ public class Menu {
 
                 return false;
         }
+    }
+
+    private void adicionarRelatorioClinico() {
+
+        if (service.consultas.isEmpty()) {
+
+            System.out.println("Não existem consultas.");
+
+            return;
+        }
+
+        System.out.println("\n=== CONSULTAS ===");
+
+        for (int i = 0; i < service.consultas.size(); i++) {
+
+            System.out.println((i + 1) + ". " + service.consultas.get(i));
+        }
+
+        System.out.print("Escolha a consulta: ");
+
+        int escolha = Integer.parseInt(sc.nextLine());
+
+        if (escolha < 1 || escolha > service.consultas.size()) {
+
+            System.out.println("Consulta inválida.");
+
+            return;
+        }
+
+        Consulta consulta = service.consultas.get(escolha - 1);
+
+        System.out.print("Observações: ");
+
+        consulta.setObservacoes(sc.nextLine());
+
+        System.out.print("Tratamento: ");
+
+        consulta.setTratamento(sc.nextLine());
+
+        System.out.print("Medicação: ");
+
+        consulta.setMedicacao(sc.nextLine());
+
+        System.out.print("Estado do animal: ");
+
+        consulta.setEstadoAnimal(sc.nextLine());
+
+        System.out.println("Relatório clínico adicionado!");
+    }
+    private void menuFinanceiro() {
+
+        if(service.consultas.isEmpty()) {
+
+            System.out.println("Não existem consultas.");
+
+            return;
+        }
+
+        System.out.println("\n=== CONSULTAS ===");
+
+        for(int i = 0; i < service.consultas.size(); i++) {
+
+            System.out.println(
+                    (i + 1)
+                            + ". "
+                            + service.consultas.get(i)
+            );
+        }
+
+        System.out.print("Escolha a consulta: ");
+
+        int escolha =
+                Integer.parseInt(sc.nextLine());
+
+        if(escolha < 1
+                || escolha > service.consultas.size()) {
+
+            System.out.println("Consulta inválida.");
+
+            return;
+        }
+
+        Consulta consulta =
+                service.consultas.get(escolha - 1);
+
+        System.out.print("Valor consulta: ");
+
+        consulta.setValorConsulta(
+                Double.parseDouble(sc.nextLine())
+        );
+
+        System.out.print("Valor medicação: ");
+
+        consulta.setValorMedicacao(
+                Double.parseDouble(sc.nextLine())
+        );
+
+        System.out.print("Valor exames: ");
+
+        consulta.setValorExames(
+                Double.parseDouble(sc.nextLine())
+        );
+
+        System.out.println(
+                consulta.gerarFatura()
+        );
+    }
+    private void menuVet() {
+
+        if (!loginSistema(VET_USER, VET_PASSWORD)) {
+
+            return;
+        }
+
+        int op;
+
+        do {
+
+            System.out.println("\n=== PAINEL VETERINÁRIO ===");
+
+            System.out.println("1. Adicionar relatório clínico");
+
+            System.out.println("2. Ver histórico clínico");
+
+            System.out.println("0. Voltar");
+
+            System.out.print("Opção: ");
+
+            op = Integer.parseInt(sc.nextLine());
+
+            switch (op) {
+
+                case 1 -> adicionarRelatorioClinico();
+
+                case 2 -> mostrarHistorico();
+
+                case 0 -> {
+                }
+
+                default -> System.out.println("Opção inválida.");
+            }
+
+        } while (op != 0);
     }
 }
