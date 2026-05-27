@@ -168,4 +168,13 @@ public class Consulta {
 
             return calcularTotal() + calcularIVA();
         }
+    public void setEmitirFatura(boolean emitirFatura) {
+
+        this.emitirFatura = emitirFatura;
+    }
+
+    public void setContribuinte(String contribuinte) {
+
+        this.contribuinte = contribuinte;
+    }
 }

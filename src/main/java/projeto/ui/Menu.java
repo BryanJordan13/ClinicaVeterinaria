@@ -351,19 +351,57 @@ public class Menu {
         }
 
         Veterinario veterinario = service.veterinarios.get(escolhaVeterinario - 1);
-            System.out.print("Data (AAAA-MM-DD): ");
 
-            String data = sc.nextLine();
+        LocalDateTime dataHora;
 
-            System.out.print("Hora (HH:MM): ");
+        while (true) {
 
-            String hora = sc.nextLine();
+            try {
 
-            LocalDateTime dataHora =
-                    LocalDateTime.parse(
-                            data + "T" + hora
+                System.out.print("Data (AAAA-MM-DD): ");
+
+                String data = sc.nextLine();
+
+                System.out.print("Hora (HH:MM): ");
+
+                String hora = sc.nextLine();
+
+                dataHora =
+                        LocalDateTime.parse(
+                                data + "T" + hora
+                        );
+
+
+                if(dataHora.isBefore(LocalDateTime.now())) {
+
+                    System.out.println(
+                            "Não pode marcar consultas no passado."
                     );
 
+                    continue;
+                }
+
+                break;
+
+            } catch (Exception e) {
+
+                System.out.println(
+                        "Formato inválido!"
+                );
+
+                System.out.println(
+                        "Exemplo correto:"
+                );
+
+                System.out.println(
+                        "2025-06-01"
+                );
+
+                System.out.println(
+                        "14:30"
+                );
+            }
+        }
         // DIAGNÓSTICO
         String diagnostico;
 
@@ -383,29 +421,16 @@ public class Menu {
             break;
         }
 
-// ================================
-        // NOVO — EMITIR FATURA?
-        // ================================
-        System.out.print("Emitir fatura (s/n): ");
-        String opc = sc.nextLine().trim().toLowerCase();
-
-        boolean emitirFatura = opc.equals("s");
-        String contribuinte = "";
-
-        if (emitirFatura) {
-            while (true) {
-                System.out.print("Contribuinte (9 dígitos): ");
-                contribuinte = sc.nextLine().trim();
-
-                if (contribuinte.matches("\\d{9}")) break;
-
-                System.out.println("Contribuinte inválido. Deve ter 9 dígitos numéricos.");
-            }
-        }
 
         // CRIAR CONSULTA COM OS NOVOS CAMPOS
-        Consulta consulta = new Consulta(animal, veterinario, dataHora, diagnostico, emitirFatura, contribuinte);
-
+        Consulta consulta = new Consulta(
+                animal,
+                veterinario,
+                dataHora,
+                diagnostico,
+                false,
+                ""
+        );
         service.adicionarConsulta(consulta);
 
         System.out.println("Consulta registada com sucesso.");
@@ -877,13 +902,56 @@ public class Menu {
                 consulta.gerarFatura()
         );
 
-        System.out.print("Exportar PDF? (s/n): ");
+        String resposta;
 
-        String resposta = sc.nextLine();
+        while (true) {
 
-        if(resposta.equalsIgnoreCase("s")) {
+            System.out.print("Emitir fatura? (s/n): ");
+
+            resposta = sc.nextLine().trim().toLowerCase();
+
+            if (resposta.equals("s") || resposta.equals("n")) {
+
+                break;
+            }
+
+            System.out.println(
+                    "Opção inválida! Use apenas s ou n."
+            );
+        }
+
+        if (resposta.equals("s")) {
+
+            while (true) {
+
+                System.out.print(
+                        "Contribuinte (9 dígitos): "
+                );
+
+                String contribuinte =
+                        sc.nextLine().trim();
+
+                if (contribuinte.matches("\\d{9}")) {
+
+                    consulta.setEmitirFatura(true);
+
+                    consulta.setContribuinte(contribuinte);
+
+                    break;
+                }
+
+                System.out.println(
+                        "Contribuinte inválido."
+                );
+            }
 
             PdfExporter.exportarFatura(consulta);
+
+        } else {
+
+            System.out.println(
+                    "Fatura não emitida."
+            );
         }
     }
     private void menuVet() {
@@ -922,5 +990,6 @@ public class Menu {
             }
 
         } while (op != 0);
+
     }
 }
