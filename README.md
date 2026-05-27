@@ -1,154 +1,203 @@
-# 🐾 Clínica Veterinária — Sistema de Gestão
-Sistema de gestão desenvolvido em **Java**, com arquitetura em camadas e persistência em **MySQL**, para administração de animais, proprietários, veterinários e consultas, incluindo emissão de faturas.
+# 🐾 Sistema de Gestão de Clínica Veterinária
+
+Projeto desenvolvido em **Java** para gestão de uma clínica veterinária, com funcionalidades de cadastro de animais, proprietários, veterinários e consultas, utilizando persistência em **MySQL** e ficheiros CSV.
 
 ---
 
-## 📌 Objetivo do Projeto
-Este projeto implementa um sistema completo para uma **Clínica Veterinária**, permitindo gerir:
+## 📂 Estrutura do Projeto
 
-- Animais e respetivos proprietários
-- Veterinários e especialidades
-- Consultas médicas
-- Emissão de faturas com contribuinte
-- Armazenamento em base de dados MySQL
-
-O sistema é modular e segue boas práticas de programação orientada a objetos.
+```text
+main
+└── java
+    └── projeto
+        ├── database
+        │   ├── DatabaseConnection
+        │   └── TesteDBeaver
+        │
+        ├── exception
+        │   ├── AnimalNaoEncontradoException
+        │   └── ConsultaInvalidaException
+        │
+        ├── model
+        │   ├── Animal
+        │   ├── Ave
+        │   ├── Cao
+        │   ├── Consulta
+        │   ├── Consultavel
+        │   ├── Gato
+        │   ├── Proprietario
+        │   └── Veterinario
+        │
+        ├── repository
+        │   ├── AnimalCsvRepository
+        │   ├── AnimalRepositoryMySQL
+        │   ├── ConsultaCsvRepository
+        │   ├── ConsultaRepositoryMySQL
+        │   ├── ProprietarioRepositoryMySQL
+        │   └── VeterinarioRepositoryMySQL
+        │
+        ├── service
+        │   └── ClinicaService
+        │
+        ├── ui
+        │   ├── Main
+        │   └── Menu
+        │
+        └── utils
+            └── PdfExporter
+```
 
 ---
 
-## 🗂 Estrutura do Projeto
-src/main/java/projeto/
-│
-├── database/
-│   ├── DatabaseConnection.java
-│   └── TesteDBeaver.java
-│
-├── exception/
-│   ├── AnimalNaoEncontradoException.java
-│   └── ConsultaInvalidaException.java
-│
-├── model/
-│   ├── Animal.java
-│   ├── Ave.java
-│   ├── Cao.java
-│   ├── Gato.java
-│   ├── Proprietario.java
-│   ├── Veterinario.java
-│   ├── Consulta.java
-│   └── Consultavel.java
-│
-├── repository/
-│   ├── AnimalCsvRepository.java
-│   ├── AnimalRepositoryMySQL.java
-│   ├── ConsultaCsvRepository.java
-│   ├── ConsultaRepositoryMySQL.java
-│   ├── ProprietarioRepositoryMySQL.java
-│   └── VeterinarioRepositoryMySQL.java
-│
-├── service/
-│   └── ClinicaService.java
-│
-└── ui/
-├── Main.java
-└── Menu.java         # Interface de consola
+# 📌 Funcionalidades
 
-✨ Funcionalidades
-🐶 Gestão de Animais
-Registar animais (cão, gato, ave, etc.)
+- ✅ Registo de animais
+- ✅ Registo de proprietários
+- ✅ Registo de veterinários
+- ✅ Marcação de consultas
+- ✅ Persistência de dados em MySQL
+- ✅ Exportação para PDF
+- ✅ Leitura e escrita em CSV
+- ✅ Menu interativo em consola
+- ✅ Tratamento de exceções personalizadas
 
-Associar a um proprietário
+---
 
-Listar animais existentes
+# 🏗️ Arquitetura
 
-👨‍⚕️ Gestão de Veterinários
-Registar veterinários
+O projeto segue uma estrutura organizada em camadas:
 
-Guardar especialidade e cédula profissional
+| Camada | Responsabilidade |
+|---|---|
+| `model` | Entidades do sistema |
+| `repository` | Acesso e persistência de dados |
+| `service` | Regras de negócio |
+| `ui` | Interface com utilizador |
+| `database` | Configuração da ligação à BD |
+| `utils` | Funcionalidades auxiliares |
+| `exception` | Exceções personalizadas |
 
-Listar veterinários
+---
 
-🩺 Consultas
-Agendar consulta com:
+# 🐶 Modelos do Sistema
 
-Animal
+## Animal
+Classe base para os animais da clínica.
 
-Veterinário
+### Especializações:
+- `Cao`
+- `Gato`
+- `Ave`
 
-Diagnóstico
+---
 
-Data automática (LocalDate.now)
+## Consulta
+Representa uma consulta veterinária.
 
-Guardar consulta em MySQL
+---
 
-Listar consultas por animal ou veterinário
+## Proprietario
+Representa o dono do animal.
 
-💶 Emissão de Faturas
-Pergunta ao utilizador se deseja emitir fatura
+---
 
-Validação do contribuinte (9 dígitos)
+## Veterinario
+Representa os médicos veterinários.
 
-Guardado na base de dados
+---
 
-Mostrado no toString() da consulta
+# 💾 Base de Dados
 
-🗄 Base de Dados (MySQL)
-Tabela consultas
-sql
-CREATE TABLE consultas (
-id INT AUTO_INCREMENT PRIMARY KEY,
-animal_id INT NOT NULL,
-veterinario_id INT NOT NULL,
-diagnostico TEXT NOT NULL,
-data DATE NOT NULL,
-emitir_fatura BOOLEAN DEFAULT FALSE,
-contribuinte VARCHAR(20),
-FOREIGN KEY (animal_id) REFERENCES animais(id),
-FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id)
-);
+O projeto utiliza:
 
+- **MySQL**
+- Ligação JDBC
+- Classe:
+  - `DatabaseConnection`
 
-⚙️ Requisitos
-Java 17+
+---
 
-MySQL 8+
+# 📄 Exportação PDF
 
-Driver JDBC
+A classe:
 
-DBeaver / MySQL Workbench (opcional)
+```java
+PdfExporter
+```
 
-▶️ Como Executar
-Criar a base de dados:
+permite gerar relatórios e documentos em PDF.
 
-sql
-CREATE DATABASE clinica_veterinaria;
-Configurar DatabaseConnection.java com:
+---
 
-URL
+# ⚠️ Exceções Personalizadas
 
-Utilizador
+## `AnimalNaoEncontradoException`
+Lançada quando um animal não existe no sistema.
 
-Password
+## `ConsultaInvalidaException`
+Lançada quando uma consulta possui dados inválidos.
 
-Criar as tabelas necessárias
+---
 
-Executar o projeto:
+# ▶️ Como Executar
 
-Via IDE (IntelliJ/Eclipse) → correr Main
+## 1. Clonar o projeto
 
-Ou via terminal:
+```bash
+git clone <url-do-repositorio>
+```
 
-Código
-javac Main.java
-java Main
-🧪 Melhorias Futuras
-Exportar fatura em PDF
+---
 
-Sistema de login (admin / funcionário)
+## 2. Configurar a Base de Dados
 
-Dashboard com estatísticas
+Criar a base de dados no MySQL e atualizar as credenciais em:
 
-Histórico clínico completo
+```java
+DatabaseConnection.java
+```
 
-👨‍💻 Autor
-Projeto desenvolvido por Bruno Monteiro, Cristiana Dionisio e Ana Cruz
-Estudante de programador Java.
+---
+
+## 3. Executar a aplicação
+
+Executar a classe:
+
+```text
+Main.java
+```
+
+---
+
+# 🛠️ Tecnologias Utilizadas
+
+- Java
+- MySQL
+- JDBC
+- CSV
+- PDF Export
+- IntelliJ IDEA
+
+---
+
+# 📌 Possíveis Melhorias
+
+- Interface gráfica (JavaFX/Swing)
+- Sistema de autenticação
+- API REST
+- Testes unitários
+- Dockerização
+- Relatórios avançados
+
+---
+
+# 👨‍💻 Autores
+Cristiana Dionisio, Bruno Monteiro, Ana Cruz
+
+Projeto académico desenvolvido para prática de:
+
+- Programação Orientada a Objetos
+- Persistência de Dados
+- Arquitetura em Camadas
+- Manipulação de Ficheiros
+- Integração com Base de Dados
