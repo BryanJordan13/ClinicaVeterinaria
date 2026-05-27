@@ -1,5 +1,6 @@
 package projeto.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Consulta {
@@ -35,6 +36,10 @@ public class Consulta {
         this.emitirFatura = emitirFatura;
         this.contribuinte = contribuinte;
     }
+
+    public Consulta(Cao cao, Veterinario v, LocalDate now, String diagnostico) {
+    }
+
 
     @Override
     public String toString() {
