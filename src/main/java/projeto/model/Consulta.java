@@ -154,4 +154,13 @@ public class Consulta {
                 + valorMedicacao
                 + valorExames;
     }
+        public double calcularIVA() {
+
+            return calcularTotal() * 0.23;
+        }
+
+        public double calcularTotalComIVA() {
+
+            return calcularTotal() + calcularIVA();
+        }
 }

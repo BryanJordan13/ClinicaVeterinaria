@@ -607,23 +607,6 @@ public class Menu {
         service.mostrarHistoricoAnimal(animal);
     }
 
-    private void menuEstatisticas() {
-
-        System.out.println("\n=== ESTATÍSTICAS ===");
-
-        System.out.println("Total de animais: " + service.animais.size());
-
-        System.out.println("Total de proprietários: " + service.proprietarios.size());
-
-        System.out.println("Total de veterinários: " + service.veterinarios.size());
-
-        System.out.println("Total de consultas: " + service.consultas.size());
-
-        System.out.println("\nEspécie mais comum: " + service.especieMaisComum());
-
-        System.out.println("Veterinário com mais consultas: " + service.veterinarioMaisConsultas());
-    }
-
     private void menuAdmin() {
 
         // LOGIN
@@ -640,9 +623,7 @@ public class Menu {
 
             System.out.println("1. Dashboard");
 
-            System.out.println("2. Estatísticas");
-
-            System.out.println("3. Gestão Financeira");
+            System.out.println("2. Gestão Financeira");
 
             System.out.println("0. Voltar");
 
@@ -654,9 +635,7 @@ public class Menu {
 
                 case 1 -> service.mostrarDashboard();
 
-                case 2 -> menuEstatisticas();
-
-                case 3 -> menuFinanceiro();
+                case 2 -> menuFinanceiro();
 
                 case 0 -> {
                 }

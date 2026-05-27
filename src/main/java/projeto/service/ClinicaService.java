@@ -263,6 +263,9 @@ public class ClinicaService {
         System.out.println("🐾 Total Animais: "
                 + animais.size());
 
+        System.out.println("👤 Total Proprietários: "
+                + proprietarios.size());
+
         System.out.println("📋 Total Consultas: "
                 + consultas.size());
 
